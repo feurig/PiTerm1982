@@ -9,6 +9,14 @@
 
 Looking under the keyboard membrane and tracing the connectors we can get the following key map under a 4x12 array (16 pins).
 
+```
+   0123456789A    B
+   --------------------
+0) *# ZXCVBNM/    <STOP>
+1) -LASDFGHJK<?>  <ENTER>
+2) 0912345678<BS> <START>
+3) POQWERTYUI<CAN><DIAL>
+```
 <table>
 <tr><td>*</td><td>#</td><td> </td><td>Z</td><td>X</td><td>C</td><td>V</td><td>B</td><td>N</td><td>M</td><td>/</td><td>STOP</td></tr>
 <tr>
@@ -26,13 +34,15 @@ For this we look at the AW9523 GPIO expander with 16 pins of io.
 
 ### LCD/VFD 
 
-Since the LCD is a 5v circuit requiring either 8 or 12 pins we look at the Microchip MCP23017 on the Adafruit GPIO Expander Bonnet. 
+Since the LCD is a 5v circuit requiring either 8 or 12 pins we look at the Microchip MCP23017 on the Adafruit GPIO Expander Bonnet which we can wire either using both ports or one port in nibble mode. 
 
+![](images/HD44780.jpg)
 # References
 * [https://learn.adafruit.com/adafruit-aw9523-gpio-expander-and-led-driver](https://learn.adafruit.com/adafruit-aw9523-gpio-expander-and-led-driver)
 * [AW9523 Datasheet](https://cdn-shop.adafruit.com/product-files/4886/AW9523+English+Datasheet.pdf)
 * [https://learn.adafruit.com/gpio-expander-bonnet/overview](https://learn.adafruit.com/gpio-expander-bonnet/overview)
 * [MCP23017 Datasheet](http://ww1.microchip.com/downloads/en/devicedoc/20001952c.pdf)
-
+* [https://protostack.com.au/2010/03/character-lcd-displays-part-1/](https://protostack.com.au/2010/03/character-lcd-displays-part-1/)
+* [https://www.electronicsforu.com/technology-trends/learn-electronics/16x2-lcd-pinout-diagram](https://www.electronicsforu.com/technology-trends/learn-electronics/16x2-lcd-pinout-diagram)
 
 
