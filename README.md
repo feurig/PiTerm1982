@@ -1,5 +1,5 @@
-# PiTerm1986
-**GOAL:** Convert 80s style user interface ( 8031 based ADP Product: chicklet keyboard and 2x20 lcd ) to pi zero based terminal using i2c based io expanders.
+# Introducing my latest rathole: PiTerm1986
+**GOAL:** Convert 80s style user interface ( 8031 based ADP Product: chicklet keyboard and 2x20 lcd ) to pi zero based terminal/console using i2c based io expanders.
 
 ![](images/IMG_3780.jpg)
 ![](images/IMG_3784.jpg)
@@ -57,7 +57,7 @@ root@somepi1:/home/feurig# i2cdetect -y 1
 ```
 
 ## Assembly and layout.
-After putting the board in the box I realized that the grey paint was conductive and that I almost let the smoke out of the pi zero. (you could smell it). So I went out and found a piece of plastic from a previous project. 
+After putting the board in the box I realized that the grey paint was conductive and that I almost let the smoke out of the pi zero. (you could smell it). So I went out in the garage and found a piece of plastic from a previous project. 
 
 ![](images/layout.jpg)
 
@@ -70,11 +70,11 @@ root@somepi1:/home/feurig# pip3 install adafruit-circuitpython-charlcd
 
 ![](images/raspberry_pi_pilcdplate.png)
 
-I am not thrilled about the way its wired but whatever.
+I am not thrilled about the way its wired but, whatever, because wiring it up according to the above schematic should let us write away.
 
 ## And then I was like OH SHIT I have Noritake 2x24 VFD thats a close fit..
 
-Wiring it up according to the above schematic lets us write away
+And ... wiring it up according to the above schematic lets us write away
 
 ```
 root@somepi1:/home/feurig# python3
