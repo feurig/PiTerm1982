@@ -10,10 +10,10 @@
 Looking under the keyboard membrane and tracing the connectors we can get the following key map under a 4x12 array (16 pins).
 
 ```
-   0123456789A    B
+   0123456789A(10)B(11)
    --------------------
 0) *# ZXCVBNM/    <STOP>
-1) -LASDFGHJK<?>  <ENTER>
+1) -LASDFGHJK<N/C><ENTER>
 2) 0912345678<BS> <START>
 3) POQWERTYUI<CAN><DIAL>
 ```
@@ -39,9 +39,9 @@ Since the LCD is a 5v circuit requiring either 8 or 12 pins we look at the Micro
 ![](images/HD44780.jpg)
 
 ### Attaching Both Boards to the Raspberry pi.
-![](images/IMG_3791.jpg)
+
+![](images/piterm1986pahts.jpg)
 ![](images/IMG_3789.jpg)
-![](images/IMG_3793.jpg)
 
 ```
 root@somepi1:/home/feurig# i2cdetect -y 1
@@ -55,6 +55,49 @@ root@somepi1:/home/feurig# i2cdetect -y 1
 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 70: -- -- -- -- -- -- -- --                         
 ```
+
+## Assembly and layout.
+After putting the board in the box I realized that the grey paint was conductive and that I almost let the smoke out of the pi zero. (you could smell it). So I went out and found a piece of plastic from a previous project. 
+
+![](images/layout.jpg)
+
+### So there's a circuitpython library for an mcp23017 connected to an lcd.
+
+```
+root@somepi1:/home/feurig# pip3 install adafruit-circuitpython-charlcd
+...
+```
+
+![](images/raspberry_pi_pilcdplate.png)
+
+I am not thrilled about the way its wired but whatever.
+
+## And then I was like OH SHIT I have Noritake 2x24 VFD thats a close fit..
+
+Wiring it up according to the above schematic lets us write away
+
+```
+root@somepi1:/home/feurig# python3
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import board
+>>> import busio
+>>> import adafruit_character_lcd.character_lcd_rgb_i2c as character_lcd
+>>> lcd_columns = 24
+>>> lcd_rows = 2
+>>> i2c = busio.I2C(board.SCL, board.SDA)
+>>> lcd = character_lcd.Character_LCD_RGB_I2C(i2c, lcd_columns, lcd_rows)
+>>> lcd.message = "Hello\nPiTerm1986"
+>>> lcd.clear()
+>>> lcd.message = "Hello\nPiTerm1982"
+>>> 
+```
+
+![](images/IMG_3809.jpg)
+
+
+
+
+
 # References
 * [https://learn.adafruit.com/adafruit-aw9523-gpio-expander-and-led-driver](https://learn.adafruit.com/adafruit-aw9523-gpio-expander-and-led-driver)
 * [AW9523 Datasheet](https://cdn-shop.adafruit.com/product-files/4886/AW9523+English+Datasheet.pdf)
