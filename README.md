@@ -94,6 +94,18 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 ![](images/IMG_3809.jpg)
 
+It't a bit jenky...
+I would like to be able to easily remap the pins without rewriting the library but I am not there.
+
+But it works.
+
+![](images/IMG_3819.jpg)
+
+Now on to the keyboard.
+If it werent for the fact that there was a readymade lcd library for the mcp23017 I would have swapped the io expanders. The aw9523 has no internal pullup or pulldown resistors. Fortunately I have piles of 10k resistors and apparently I have time.
+
+![](images/adpkbdaw9523_schem.jpg)
+
 
 
 
