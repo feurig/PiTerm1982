@@ -44,10 +44,10 @@ while True:
         row_pins[r].value=0
         old_row=r
         for c in range(12):
-            if (col_pins[c].value==0 and switch_state[r][c]==1):
-                switch_state[r][c]=0
+            if (col_pins[c].value==0 and switch_state[r][c]==0):
+                switch_state[r][c]=1
                 print(keymap[r][c])
                 lcd.message+=keymap[r][c]
-            if (col_pins[c].value==1 and switch_state[r][c]==0):
-                switch_state[r][c]=1
+            if (col_pins[c].value==1 and switch_state[r][c]==1):
+                switch_state[r][c]=0
     time.sleep(0.01)  # debounce
