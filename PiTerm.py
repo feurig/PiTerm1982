@@ -1,3 +1,4 @@
+import time
 import board
 import busio
 import adafruit_character_lcd.character_lcd_rgb_i2c as character_lcd
@@ -32,11 +33,21 @@ old_row=0;
 for pin in row_pins:
     pin.value=1
 
+switch_state = [[0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0]
+               ]
 while True:
     for r in range(4):
         row_pins[old_row].value=1
         row_pins[r].value=0
         old_row=r
         for c in range(12):
-            if (col_pins[c].value==0):
+            if (col_pins[c].value==0 and switch_state[r][c]==1):
+                switch_state[r][c]=0
                 print(keymap[r][c])
+                lcd.message+=keymap[r][c]
+            if (col_pins[c].value==1 and switch_state[r][c]==0):
+                switch_state[r][c]=1
+    time.sleep(0.01)  # debounce
