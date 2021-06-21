@@ -57,9 +57,10 @@ root@somepi1:/home/feurig# i2cdetect -y 1
 ```
 
 ## Assembly and layout.
-After putting the board in the box I realized that the grey paint was conductive and that I almost let the smoke out of the pi zero. (you could smell it). So I went out in the garage and found a piece of plastic from a previous project. 
+After putting the board in the box I realized that the grey paint was conductive and that I almost let the smoke out of the pi zero. (you could smell it). So I went out in the garage and found a piece of plastic from a previous project. And then I was like OH SHIT I have Noritake 2x24 VFD thats a close fit..
 
-![](images/layout.jpg)
+
+![](images/IMG_3826.jpg)
 
 ### So there's a circuitpython library for an mcp23017 connected to an lcd.
 
@@ -71,29 +72,6 @@ root@somepi1:/home/feurig# pip3 install adafruit-circuitpython-charlcd
 ![](images/raspberry_pi_pilcdplate.png)
 
 I am not thrilled about the way its wired but, whatever, because wiring it up according to the above schematic should let us write away.
-
-## And then I was like OH SHIT I have Noritake 2x24 VFD thats a close fit..
-
-And ... wiring it up according to the above schematic lets us write away
-
-```
-root@somepi1:/home/feurig# python3
-Type "help", "copyright", "credits" or "license" for more information.
->>> import board
->>> import busio
->>> import adafruit_character_lcd.character_lcd_rgb_i2c as character_lcd
->>> lcd_columns = 24
->>> lcd_rows = 2
->>> i2c = busio.I2C(board.SCL, board.SDA)
->>> lcd = character_lcd.Character_LCD_RGB_I2C(i2c, lcd_columns, lcd_rows)
->>> lcd.message = "Hello\nPiTerm1986"
->>> lcd.clear()
->>> lcd.message = "Hello\nPiTerm1982"
->>> 
-```
-
-![](images/IMG_3809.jpg)
-
 It't a bit jenky...
 I would like to be able to easily remap the pins without rewriting the library but I am not there.
 
@@ -102,11 +80,67 @@ But it works.
 ![](images/IMG_3819.jpg)
 
 Now on to the keyboard.
-If it werent for the fact that there was a readymade lcd library for the mcp23017 I would have swapped the io expanders. The aw9523 has no internal pullup or pulldown resistors. Fortunately I have piles of 10k resistors and apparently I have time.
+If it werent for the fact that there was a readymade lcd library for the mcp23017 I would have swapped the io expanders. The aw9523 has no internal pullup or pulldown resistors. Fortunately I have piles of 10k resistors and apparently I have time. (Not enough time to make fritzing make part to wire connections look good it seems)
 
 ![](images/adpkbdaw9523_schem.jpg)
 
+Here is a simple circtuitpython program which presents a prompt and then puts characters scanned by the keyboard onto the display.
 
+```
+import time
+import board
+import busio
+import adafruit_character_lcd.character_lcd_rgb_i2c as character_lcd
+import adafruit_aw9523
+
+keymap=[]
+keymap.append('*# ZXCVBNM/\001')
+keymap.append('-LASDFGHJK\r\n')
+keymap.append('0912345678\010\002')
+keymap.append('POQWERTYUI\030\004')
+
+lcd_columns = 24
+lcd_rows = 2
+i2c = busio.I2C(board.SCL, board.SDA)
+lcd = character_lcd.Character_LCD_RGB_I2C(i2c, lcd_columns, lcd_rows)
+lcd.message = "PiTerm 1986 v0.0\nOk >"
+
+aw = adafruit_aw9523.AW9523(i2c)
+row_pins = [aw.get_pin(8),aw.get_pin(9),aw.get_pin(10),aw.get_pin(11)]
+for pin in row_pins:
+   pin.switch_to_output(value=True)
+
+col_pins = [aw.get_pin(0),aw.get_pin(15),aw.get_pin(14),aw.get_pin(13),
+            aw.get_pin(12),aw.get_pin(7),aw.get_pin(6),aw.get_pin(5),
+            aw.get_pin(4),aw.get_pin(3),aw.get_pin(2),aw.get_pin(1)]
+
+for pin in col_pins:
+   pin.switch_to_input(value=True)
+
+
+old_row=0;
+for pin in row_pins:
+    pin.value=1
+
+switch_state = [[0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0]
+               ]
+while True:
+    for r in range(4):
+        row_pins[old_row].value=1
+        row_pins[r].value=0
+        old_row=r
+        for c in range(12):
+            if (col_pins[c].value==0 and switch_state[r][c]==0):
+                switch_state[r][c]=1
+                print(keymap[r][c])
+                lcd.message+=keymap[r][c]
+            if (col_pins[c].value==1 and switch_state[r][c]==1):
+                switch_state[r][c]=0
+    time.sleep(0.01)  # debounce
+```
 
 
 
